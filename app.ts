@@ -14,7 +14,7 @@ mongoose
     console.log(err);
   });
 
-app.use(router);
+app.use("/auth/users",router);
 
 app.listen(4000, () => {
   console.log("Server started at 3000");

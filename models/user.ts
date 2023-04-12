@@ -1,15 +1,28 @@
-import {Schema, model} from "mongoose";
+import { Schema, model } from "mongoose";
+import jwt from "jsonwebtoken";
 
-const userSchema = new Schema({
+interface UserDocument {
+  email: string;
+  password: string;
+  generateAuthToken: () => string;
+}
+
+const userSchema = new Schema<UserDocument>({
   email: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
 });
 
-export const UserModel = model("User", userSchema)
+userSchema.methods.generateAuthToken = function (): string {
+  const token = jwt.sign({ _id: this._id }, "jwtPrivateKey");
+
+  return token;
+};
+
+export const UserModel = model("User", userSchema);
